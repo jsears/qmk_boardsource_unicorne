@@ -5,6 +5,7 @@
         ["boardsource/unicorne", "unicorne_mx"],
         ["boardsource/unicorne", "markstos"],
         ["beekeeb/piantor", "default"],
-        ["inland/mk47", "inland"]
+        ["inland/mk47", "inland"],
+        ["planck/rev7", "default"]
     ]
 }

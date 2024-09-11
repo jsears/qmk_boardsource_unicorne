@@ -77,7 +77,12 @@ uint32_t mouse_interval = 10000; // (every 10s)
 
 static uint32_t idle_callback(uint32_t trigger_time, void* cb_arg) {
     // now idle
-    SEND_STRING(SS_TAP(X_F15));
+    if(is_jiggling) {
+        #ifdef CONSOLE_ENABLE
+        dprintf("sending: %s\n", "X_F15");
+        #endif
+        SEND_STRING(SS_TAP(X_F15));
+    }
     return mouse_interval;
 }
 
@@ -85,6 +90,10 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 
      // on every key event start or extend `idle_callback()` deferred execution after IDLE_TIMEOUT_MS
     static deferred_token idle_token = INVALID_DEFERRED_TOKEN;
+
+    #ifdef CONSOLE_ENABLE
+        dprintf("deferred_exec: %s\n", !extend_deferred_exec(idle_token, idle_timeout) ? "true" : "false");
+        #endif
 
     if (!extend_deferred_exec(idle_token, idle_timeout)) {
         idle_token = defer_exec(idle_timeout, idle_callback, NULL);
@@ -98,6 +107,9 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         case KC_JIGG:
             if (record->event.pressed) {
                     is_jiggling = !is_jiggling; /*flip boolean to true*/
+                    #ifdef CONSOLE_ENABLE
+                    dprintf("is_jiggling: %s\n", is_jiggling ? "true" : "false");
+                    #endif
                     if(is_jiggling) {
                         layer_on(_SPCHRS);
                     } else {
@@ -209,7 +221,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         KC_GRV,     KC_F1,      KC_F2,      KC_F3,      KC_F4,      KC_F5,      KC_F6,      KC_F7,      KC_F8,      KC_F9,      KC_F10,    KC_F12,\
         _______,    KC_1,       KC_2,       KC_3,       KC_4,       KC_5,       KC_6,       KC_7,       KC_8,       KC_9,       KC_0,      XXXXXXX,\
         _______,    XXXXXXX,    XXXXXXX,    KC_EQL,     KC_LBRC,    KC_LCBR,    KC_RCBR,    KC_RBRC,    KC_MINS,    XXXXXXX,    XXXXXXX,   XXXXXXX,\
-        _______,    XXXXXXX,    XXXXXXX,    KC_TRNS,    KC_TRNS,    TD_SPC_ENT, KC_TRNS,    KC_TRNS,    KC_TRNS,    XXXXXXX,    XXXXXXX\
+        _______,    XXXXXXX,    XXXXXXX,    KC_TRNS,    KC_TRNS,    TD(TD_SPC_ENT), KC_TRNS,    KC_TRNS,    KC_TRNS,    XXXXXXX,    XXXXXXX\
     ),
  
     [_RAISE] = LAYOUT_planck_mit(\
