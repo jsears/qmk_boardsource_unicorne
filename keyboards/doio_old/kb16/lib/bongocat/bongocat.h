@@ -1,5 +1,4 @@
-/* Copyright 2022 DOIO
- * Copyright 2022 HorrorTroll <https://github.com/HorrorTroll>
+/* Copyright 2022 HorrorTroll <https://github.com/HorrorTroll>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,9 +16,4 @@
 
 #pragma once
 
-#ifdef OLED_ENABLE
-    /* Mapping I2C2 for OLED */
-    #define I2C1_SCL_PIN B10
-    #define I2C1_SDA_PIN B11
-    #define I2C_DRIVER I2CD2
-#endif
+void render_bongocat(void);
