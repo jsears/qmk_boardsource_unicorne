@@ -32,6 +32,72 @@ enum layer_names {
     _FN2
 };
 
+enum custom_keycodes {
+    DEFAULT = SAFE_RANGE,
+    KC_JIGG
+};
+
+__attribute__((weak))
+bool process_record_keymap(uint16_t keycode, keyrecord_t *record) { return true; }
+
+__attribute__((weak))
+bool process_record_secrets(uint16_t keycode, keyrecord_t *record) { return true; }
+
+/*declare boolean for jiggler*/
+bool is_jiggling = false;
+
+/*timers*/
+uint32_t idle_timeout = 30000; // (after 30s)
+uint32_t mouse_interval = 10000; // (every 10s)
+
+static uint32_t idle_callback(uint32_t trigger_time, void* cb_arg) {
+    // now idle
+    if(is_jiggling) {
+        #ifdef CONSOLE_ENABLE
+        dprintf("sending: %s\n", "X_F15");
+        #endif
+        SEND_STRING(SS_TAP(X_F15));
+    }
+    return mouse_interval;
+}
+
+bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+
+     // on every key event start or extend `idle_callback()` deferred execution after IDLE_TIMEOUT_MS
+    static deferred_token idle_token = INVALID_DEFERRED_TOKEN;
+
+    #ifdef CONSOLE_ENABLE
+        dprintf("deferred_exec: %s\n", !extend_deferred_exec(idle_token, idle_timeout) ? "true" : "false");
+        #endif
+
+    if (!extend_deferred_exec(idle_token, idle_timeout)) {
+        idle_token = defer_exec(idle_timeout, idle_callback, NULL);
+    }
+
+#ifdef CONSOLE_ENABLE
+    // uprintf("KL: kc: 0x%04X, col: %2u, row: %2u, pressed: %u, time: %5u, int: %u, count: %u\n", keycode, record->event.key.col, record->event.key.row, record->event.pressed, record->event.time, record->tap.interrupted, record->tap.count);
+#endif
+
+    switch (keycode) {
+        case KC_JIGG:
+            if (record->event.pressed) {
+                    is_jiggling = !is_jiggling; /*flip boolean to true*/
+                    #ifdef CONSOLE_ENABLE
+                    dprintf("is_jiggling: %s\n", is_jiggling ? "true" : "false");
+                    #endif
+                    if(is_jiggling) {
+                        layer_on(_FN);
+                    } else {
+                        layer_off(_FN);
+                    }
+            }
+
+            break;
+    }
+    // return true;
+    return process_record_keymap(keycode, record) && process_record_secrets(keycode, record);
+}
+
 // enum layer_keycodes { };
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
@@ -77,7 +143,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 */
     /*  Row:    0        1        2        3        4       */
     [_FN] = LAYOUT(
-                _______, _______, _______, _______, _______,
+                _______, _______, _______, KC_JIGG, _______,
                 _______, _______, _______, _______, TO(_FN1),
                 _______, _______, _______, _______, _______,
                 _______, _______, _______, _______
