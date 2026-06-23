@@ -20,18 +20,25 @@ enum planck_layers { _QWERTY, _COLEMAK, _COLEMAKDH, _DVORAK, _LOWER, _RAISE, _FU
 
 enum planck_keycodes { QWERTY = SAFE_RANGE, COLEMAK, COLEMAKDH, DVORAK, PLOVER, BACKLIT, EXT_PLV, LOCKWIN, C_ALT_D, SNAP_LFT, SNAP_RT, SNAP_TOP, SNAP_BTM};
 
-//Combos
-enum combos { JK_ESC };
+enum combos {
+  JK_ESC
+};
 const uint16_t PROGMEM jk_combo[] = {KC_J, KC_K, COMBO_END};
-// For Vim, put Escape on the home row
-combo_t key_combos[COMBO_COUNT] = { [JK_ESC] = COMBO(jk_combo, KC_ESC),};
+
+combo_t key_combos[COMBO_COUNT] = {
+  // For Vim, put Escape on the home row
+  [JK_ESC]    = COMBO(jk_combo, KC_ESC),
+
+};
 
 // Tap Dance declarations
-enum { TD_SPC_ENT, };
+enum {
+    TD_SPC_ENT,
+};
 
 // Tap Dance definitions
-// Tap once for Space, twice for Enter Lock
 tap_dance_action_t tap_dance_actions[] = {
+    // Tap once for Space, twice for Enter Lock
     [TD_SPC_ENT] = ACTION_TAP_DANCE_DOUBLE(KC_SPC, KC_ENT),
 };
 
