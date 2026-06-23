@@ -1,38 +1,20 @@
+/* Copyright 2015-2023 Jack Humbert
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 #pragma once
-
-/* SPI Config for spi flash*/
-#define SPI_DRIVER SPIDQ
-#define SPI_SCK_PIN B3
-#define SPI_MOSI_PIN B5
-#define SPI_MISO_PIN B4
-
-#define EXTERNAL_FLASH_SPI_SLAVE_SELECT_PIN C12
-
-/* I2C Config for LED Driver */
-#define SNLED27351_I2C_ADDRESS_1 SNLED27351_I2C_ADDRESS_GND
-
-/* WB32 MCU has no default definition */
-#define I2C1_OPMODE OPMODE_I2C
-#define I2C1_CLOCK_SPEED 400000
-
-#define RGB_MATRIX_LED_COUNT 47
-
-#define RGB_MATRIX_DEFAULT_SPD 127
-#define RGB_MATRIX_TIMEOUT 180000 // 3 minutes // 300000 = 5 minutes
-#define RGB_MATRIX_LED_FLUSH_LIMIT 16
-
-#define RGB_MATRIX_DEFAULT_SAT 77
-#define RGB_MATRIX_DEFAULT_VAL 86
-#define RGB_DISABLE_WHEN_USB_SUSPENDED
-
-#define ENABLE_RGB_MATRIX_ALPHAS_MODS
-#define RGB_MATRIX_DEFAULT_MODE RGB_MATRIX_ALPHAS_MODS
-#define ENABLE_RGB_MATRIX_SOLID_REACTIVE
-#define RGB_TRIGGER_ON_KEYDOWN
-
-#define RGB_MATRIX_FRAMEBUFFER_EFFECTS
-#define RGB_MATRIX_KEYPRESSES
-
 
 // Customized by markstos
 #define TAPPING_TERM 200
@@ -59,7 +41,28 @@
 // They would have be held together intentionally to trigger this.
 #define COMBO_TERM 40
 
-// These mostly affect my one-shot Shift key, providing a CapsLock alternative.
-// I want a relatively low timeout, so if I accidentally type "Shift", I can pause just briefly and move on.
-#define ONESHOT_TAP_TOGGLE 3  /* Tapping this number of times holds the key until tapped once again. */
-#define ONESHOT_TIMEOUT 2000  /* Time (in ms) before the one shot key is released */
+#ifdef AUDIO_ENABLE
+// #    define STARTUP_SONG SONG(PLANCK_SOUND)
+#define STARTUP_SONG SONG(NO_SOUND)
+
+#    define DEFAULT_LAYER_SONGS \
+        { SONG(QWERTY_SOUND), SONG(COLEMAK_SOUND), SONG(DVORAK_SOUND) }
+#endif
+
+/*
+ * MIDI options
+ */
+
+/* enable basic MIDI features:
+   - MIDI notes can be sent when in Music mode is on
+*/
+
+#define MIDI_BASIC
+
+/* enable advanced MIDI features:
+   - MIDI notes can be added to the keymap
+   - Octave shift and transpose
+   - Virtual sustain, portamento, and modulation wheel
+   - etc.
+*/
+// #define MIDI_ADVANCED

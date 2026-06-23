@@ -41,15 +41,9 @@
 // They would have be held together intentionally to trigger this.
 #define COMBO_TERM 40
 
-// These mostly affect my one-shot Shift key, providing a CapsLock alternative.
-// I want a relatively low timeout, so if I accidentally type "Shift", I can pause just briefly and move on.
-#define ONESHOT_TAP_TOGGLE 3  /* Tapping this number of times holds the key until tapped once again. */
-#define ONESHOT_TIMEOUT 2000  /* Time (in ms) before the one shot key is released */
-
-
 #ifdef AUDIO_ENABLE
-#    define STARTUP_SONG SONG(PLANCK_SOUND)
-// #define STARTUP_SONG SONG(NO_SOUND)
+// #    define STARTUP_SONG SONG(PLANCK_SOUND)
+#define STARTUP_SONG SONG(NO_SOUND)
 
 #    define DEFAULT_LAYER_SONGS \
         { SONG(QWERTY_SOUND), SONG(COLEMAK_SOUND), SONG(DVORAK_SOUND) }
