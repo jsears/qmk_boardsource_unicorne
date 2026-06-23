@@ -1,11 +1,9 @@
-SERIAL_DRIVER = vendor
-AUDIO_DRIVER = pwm_hardware
-POINTING_DEVICE_DRIVER = analog_joystick
-OLED_ENABLE = yes
-AUDIO_ENABLE = yes
-MOUSEKEY_ENABLE = no
+BOOTMAGIC_ENABLE = yes      
+CONSOLE_ENABLE = yes       
+COMMAND_ENABLE = no         
 ENCODER_ENABLE = no
-ENCODER_MAP_ENABLE = no
+RGB_MATRIX_ENABLE = yes
+VIA_ENABLE = no
 
 # markstos: enable media keys
 EXTRAKEY_ENABLE = yes
@@ -18,4 +16,4 @@ LINK_TIME_OPTIMIZATION_ENABLE = yes
 # markstos: for combos!
 COMBO_ENABLE = yes
 
-TAP_DANCE_ENABLE = no
+TAP_DANCE_ENABLE = yes

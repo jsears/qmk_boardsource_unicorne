@@ -88,7 +88,7 @@ static uint32_t idle_callback(uint32_t trigger_time, void* cb_arg) {
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 
-     // on every key event start or extend `idle_callback()` deferred execution after IDLE_TIMEOUT_MS
+    // on every key event start or extend `idle_callback()` deferred execution after IDLE_TIMEOUT_MS
     static deferred_token idle_token = INVALID_DEFERRED_TOKEN;
 
     #ifdef CONSOLE_ENABLE
