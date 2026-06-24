@@ -232,7 +232,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     ),
 
     [_FUNC] = LAYOUT_planck_mit(\
-        KC_TRNS,    XXXXXXX,    XXXXXXX,    XXXXXXX,    XXXXXXX,    XXXXXXX,    KVM_SW,     XXXXXXX,    SNAP_TOP,   XXXXXXX,    RGB_TOG,    _______,\
+        KC_TRNS,    XXXXXXX,    XXXXXXX,    XXXXXXX,    XXXXXXX,    XXXXXXX,    KVM_SW,     XXXXXXX,    SNAP_TOP,   XXXXXXX,    RM_TOGG,    _______,\
         C_ALT_D,    XXXXXXX,    XXXXXXX,    XXXXXXX,    XXXXXXX,    XXXXXXX,    XXXXXXX,    SNAP_LFT,   SNAP_BTM,   SNAP_RT,    KC_CALC,    _______,\
         KC_TRNS,    XXXXXXX,    XXXXXXX,    XXXXXXX,    XXXXXXX,    KC_NUM,     LOCKWIN,    QK_RBT,     QK_BOOT,    EE_CLR,     KC_SLEP,    _______,\
         XXXXXXX,    XXXXXXX,    XXXXXXX,    KC_TRNS,    KC_TRNS,    KC_TRNS,    KC_TRNS,    KC_TRNS,    KC_TRNS,    XXXXXXX,    KC_JIGG\

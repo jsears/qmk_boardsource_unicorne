@@ -213,9 +213,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 [_FUNC] = LAYOUT_split_3x6_3( \
   //,-----------------------------------------------------.                    ,-----------------------------------------------------.
-      _______, KC_F1  , KC_F2  , KC_F3   , KC_F4 ,  KC_F5 ,                     RGB_VAI, RGB_HUI, RGB_SAI, RGB_MOD, RGB_TOG, _______,\
+      _______, KC_F1  , KC_F2  , KC_F3   , KC_F4 ,  KC_F5 ,                     RM_VALU, RM_HUEU, RM_SATU, RM_NEXT, RM_TOGG, _______,\
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-      _______, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,  KC_F12,                     RGB_VAD, RGB_HUD, RGB_SAD, RGB_RMOD,XXXXXXX, _______,\
+      _______, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,  KC_F12,                     RM_VALD, RM_HUED, RM_SATD, RM_PREV, XXXXXXX, _______,\
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
       _______, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,  KC_NUM,                     LOCKWIN, QK_RBT,  QK_BOOT, EE_CLR,  KC_SLEP, _______,\
   //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|

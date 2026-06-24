@@ -36,7 +36,8 @@ enum custom_keycodes {
     SNAP_LFT,
     SNAP_RT,
     SNAP_TOP,
-    SNAP_BTM
+    SNAP_BTM,
+    KVM_SW
 };
 
 enum combos {
@@ -233,7 +234,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 [_FUNC] = LAYOUT_split_3x6_3( \
   //,-----------------------------------------------------.                    ,-----------------------------------------------------.
-      _______, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                     XXXXXXX, XXXXXXX, SNAP_TOP, XXXXXXX, RGB_TOG, _______,\
+      _______, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                     XXXXXXX, XXXXXXX, SNAP_TOP, XXXXXXX, RM_TOGG, _______,\
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
       C_ALT_D, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                     XXXXXXX,SNAP_LFT, SNAP_BTM, SNAP_RT, KC_CALC, _______,\
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
