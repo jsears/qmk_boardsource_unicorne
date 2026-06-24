@@ -212,7 +212,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
       C_ALT_D, MS_LEFT, MS_UP  , MS_DOWN, MS_RGHT,  KC_F12,                     M_JIGL,SNAP_LFT, SNAP_BTM, SNAP_RT, KC_CALC, _______,\
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-      _______, KC_BTN1, KC_BTN2, KC_BTN3, XXXXXXX,  KC_NUM,                     LOCKWIN, QK_RBT,  QK_BOOT, EE_CLR,  KC_SLEP, _______,\
+      _______, MS_BTN1, MS_BTN2, MS_BTN3, XXXXXXX,  KC_NUM,                     LOCKWIN, QK_RBT,  QK_BOOT, EE_CLR,  KC_SLEP, _______,\
   //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
                                           KC_TRNS, KC_TRNS, KC_TRNS,    KC_TRNS, KC_TRNS, KC_TRNS\
                                       //`--------------------------'  `--------------------------'
