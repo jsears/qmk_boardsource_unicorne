@@ -271,7 +271,8 @@ layer_state_t layer_state_set_user(layer_state_t state) {
         rgb_matrix_sethsv(HSV_RED);
         break;
     case _SPCHRS:
-        rgb_matrix_set_color(i, HSV_YELLOW);
+        // rgb_matrix_set_color(i, HSV_YELLOW);
+        rgb_matrix_sethsv(HSV_YELLOW);
         break;
     }
   return state;
@@ -310,7 +311,8 @@ bool oled_task_user(void) {
                 oled_write_ln_P(PSTR("Undefined"), false);
         }
     } else {
-        oled_write_raw(logo, sizeof(logo));
+        // oled_write_raw(logo, sizeof(logo));
+        oled_write_raw_P(bs_logo_img, sizeof(bs_logo_img));
     }
     return false;
 }

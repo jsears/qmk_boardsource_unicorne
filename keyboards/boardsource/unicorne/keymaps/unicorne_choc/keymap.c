@@ -274,7 +274,8 @@ bool oled_task_user(void) {
                 break;
         }
     } else {
-        oled_write_raw(logo, sizeof(logo));
+        // oled_write_raw(logo, sizeof(logo));
+        oled_write_raw_P(bs_logo_img, sizeof(bs_logo_img));
     }
     return false;
 }

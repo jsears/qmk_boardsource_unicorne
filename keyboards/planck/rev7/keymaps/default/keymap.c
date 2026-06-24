@@ -1,19 +1,3 @@
-/* Copyright 2015-2023 Jack Humbert
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 2 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
-
 #include QMK_KEYBOARD_H
 
 enum planck_layers { _QWERTY, _COLEMAK, _COLEMAKDH, _DVORAK, _LOWER, _RAISE, _FUNC, _PLOVER, _ADJUST };
@@ -23,22 +7,19 @@ enum planck_keycodes { QWERTY = SAFE_RANGE, COLEMAK, COLEMAKDH, DVORAK, PLOVER, 
 enum combos {
   JK_ESC
 };
+
 const uint16_t PROGMEM jk_combo[] = {KC_J, KC_K, COMBO_END};
 
 combo_t key_combos[COMBO_COUNT] = {
-  // For Vim, put Escape on the home row
   [JK_ESC]    = COMBO(jk_combo, KC_ESC),
 
 };
 
-// Tap Dance declarations
-enum {
+enum tapdances {
     TD_SPC_ENT,
 };
 
-// Tap Dance definitions
-tap_dance_action_t tap_dance_actions[] = {
-    // Tap once for Space, twice for Enter Lock
+qk_tap_dance_action_t tap_dance_actions[] = {
     [TD_SPC_ENT] = ACTION_TAP_DANCE_DOUBLE(KC_SPC, KC_ENT),
 };
 
@@ -46,7 +27,6 @@ tap_dance_action_t tap_dance_actions[] = {
 #define LOWER MO(_LOWER)
 #define RAISE MO(_RAISE)
 
-// For _QWERTY layer
 #define OSL_FUN  OSL(_FUNC)
 #define LOW_TAB  LT(_LOWER, KC_TAB)
 #define RSE_BSP  LT(_RAISE, KC_BSPC)
@@ -56,7 +36,6 @@ tap_dance_action_t tap_dance_actions[] = {
 #define OSM_CTL  OSM(MOD_LCTL)
 #define OSM_GUI  OSM(MOD_LGUI)
 
-// For _LOWER layer
 #define ALT_TAB LALT(KC_TAB)
 
 /* clang-format off */
