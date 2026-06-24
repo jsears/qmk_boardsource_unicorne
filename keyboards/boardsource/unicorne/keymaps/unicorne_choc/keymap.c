@@ -136,9 +136,9 @@ void matrix_scan_user(void) {
             mouse_jiggle_timer = timer_read();
             tap_code(KC_NUM);
             if (mouse_jiggle_direction) {
-                tap_code(KC_MS_L);
+                tap_code(MS_LEFT);
             } else {
-                tap_code(KC_MS_R);
+                tap_code(MS_RGHT);
             }
             tap_code(KC_NUM);
             mouse_jiggle_direction = !mouse_jiggle_direction;
@@ -210,7 +210,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //,-----------------------------------------------------.                    ,-----------------------------------------------------.
       _______, KC_F1  , KC_F2  , KC_F3   , KC_F4 ,  KC_F5 ,                     KVM_SW, XXXXXXX, SNAP_TOP, XXXXXXX, RM_TOGG, _______,\
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-      C_ALT_D, KC_MS_L, KC_MS_U, KC_MS_D, KC_MS_R,  KC_F12,                     M_JIGL,SNAP_LFT, SNAP_BTM, SNAP_RT, KC_CALC, _______,\
+      C_ALT_D, MS_LEFT, MS_UP  , MS_DOWN, MS_RGHT,  KC_F12,                     M_JIGL,SNAP_LFT, SNAP_BTM, SNAP_RT, KC_CALC, _______,\
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
       _______, KC_BTN1, KC_BTN2, KC_BTN3, XXXXXXX,  KC_NUM,                     LOCKWIN, QK_RBT,  QK_BOOT, EE_CLR,  KC_SLEP, _______,\
   //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|

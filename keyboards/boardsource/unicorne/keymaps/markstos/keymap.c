@@ -138,9 +138,9 @@ void matrix_scan_user(void) {
             mouse_jiggle_timer = timer_read();
             tap_code(KC_NUM);
             if (mouse_jiggle_direction) {
-                tap_code(KC_MS_L);
+                tap_code(MS_LEFT);
             } else {
-                tap_code(KC_MS_R);
+                tap_code(MS_RGHT);
             }
             tap_code(KC_NUM);
             mouse_jiggle_direction = !mouse_jiggle_direction;
@@ -225,7 +225,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 [_MOUSE] = LAYOUT_split_3x6_3( \
   //,-----------------------------------------------------.                    ,-----------------------------------------------------.
-      _______, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                     XXXXXXX, KC_MS_L, KC_MS_U, KC_MS_D, KC_MS_R, _______,\
+      _______, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                     XXXXXXX, MS_LEFT, MS_UP  , MS_DOWN, MS_RGHT, _______,\
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
       _______, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                     XXXXXXX, KC_BTN1, KC_BTN2, XXXXXXX, XXXXXXX, _______,\
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
