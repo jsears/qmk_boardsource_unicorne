@@ -2,13 +2,7 @@
 {
     "userspace_version": "1.0",
     "build_targets": [
-        ["boardsource/unicorne", "unicorne_choc"],
-        ["boardsource/unicorne", "unicorne_mx"],
-        ["boardsource/unicorne", "markstos"],
-        ["beekeeb/piantor", "default"],
-        ["inland/mk47", "inland"],
         ["planck/rev7", "default"],
-        ["doio/kb16/rev1", "via"],
-        ["doio/kb16/rev1", "default"]
+        ["planck/rev7", "olddefault"]
     ]
 }

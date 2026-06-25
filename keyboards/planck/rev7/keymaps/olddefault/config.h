@@ -16,9 +16,23 @@
 
 #pragma once
 
+#define TAPPING_TERM 200
+#define TAPPING_TERM_PER_KEY
+#define TAPPING_TERM_THUMB 125
+
+#define HOLD_ON_OTHER_KEY_PRESS
+
+#define PREVENT_STUCK_MODIFER
+
+#define PERMISSIVE_HOLD
+
+#define COMBO_COUNT 1
+
+#define COMBO_TERM 40
+
 #ifdef AUDIO_ENABLE
-#    define STARTUP_SONG SONG(PLANCK_SOUND)
-// #define STARTUP_SONG SONG(NO_SOUND)
+// #    define STARTUP_SONG SONG(PLANCK_SOUND)
+#define STARTUP_SONG SONG(NO_SOUND)
 
 #    define DEFAULT_LAYER_SONGS \
         { SONG(QWERTY_SOUND), SONG(COLEMAK_SOUND), SONG(DVORAK_SOUND) }
@@ -41,10 +55,3 @@
    - etc.
 */
 // #define MIDI_ADVANCED
-
-/*
- * Encoder options
- */
-// #define PLANCK_ENCODER_SETTLE_PIN_STATE_DELAY 20
-// #define ENCODER_MAP_KEY_DELAY 10
-// #define ENCODER_RESOLUTION 4
