@@ -2,30 +2,12 @@
 
 extern uint8_t is_master;
 
-bool is_mouse_jiggle_active = false;
-bool mouse_jiggle_direction = false; // used to alternate direction
-uint16_t mouse_jiggle_frequency = 3000; // how often to move the mouse (15 seconds)
-uint16_t mouse_jiggle_timer = 0;
-
-bool is_alt_tab_active = false; // ADD this near the beginning of keymap.c
-uint16_t alt_tab_timer = 0;     // we will be using them soon.
-
-void keyboard_post_init_user(void) {
-#ifdef RGB_MATRIX_ENABLE
-    rgb_matrix_enable();
-    rgb_matrix_set_speed(RGB_MATRIX_DEFAULT_SPD);
-    //rgb_matrix_mode(RGB_MATRIX_SOLID_REACTIVE);
-    rgb_matrix_sethsv(HSV_PURPLE);
-#endif
-}
-
 enum custom_keycodes {
     DEFAULT = SAFE_RANGE,
     LOWER,
     RAISE,
     FUNC,
     LOCKWIN,
-    M_JIGL,
     C_ALT_D,
     SNAP_LFT,
     SNAP_RT,
@@ -60,11 +42,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                 unregister_code(KC_L);  // release the L key
             }
             break;
-        case M_JIGL:
-            if (record->event.pressed) {
-                is_mouse_jiggle_active = !is_mouse_jiggle_active;
-            }
-          break;
         case C_ALT_D:
             if(record->event.pressed) {
                 register_code(KC_LCTL);
@@ -123,27 +100,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         break;
     }
     return true;
-}
-
-void matrix_scan_user(void) {
-    if (is_keyboard_master()) {
-        // initialize timer on master half only, remove if statement above for non-split
-        if (mouse_jiggle_timer == 0) mouse_jiggle_timer = timer_read();
-    }
-
-    if (is_mouse_jiggle_active) {
-        if (timer_elapsed(mouse_jiggle_timer) > mouse_jiggle_frequency) {
-            mouse_jiggle_timer = timer_read();
-            tap_code(KC_NUM);
-            if (mouse_jiggle_direction) {
-                tap_code(MS_LEFT);
-            } else {
-                tap_code(MS_RGHT);
-            }
-            tap_code(KC_NUM);
-            mouse_jiggle_direction = !mouse_jiggle_direction;
-        } 
-    }
 }
 
 // Each layer gets a name for readability, which is then used in the keymap matrix below.
@@ -208,9 +164,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 [_FUNC] = LAYOUT_split_3x6_3( \
   //,-----------------------------------------------------.                    ,-----------------------------------------------------.
-      _______, KC_F1  , KC_F2  , KC_F3   , KC_F4 ,  KC_F5 ,                     KVM_SW, XXXXXXX, SNAP_TOP, XXXXXXX, RM_TOGG, _______,\
+      _______, KC_F1  , KC_F2  , KC_F3   , KC_F4 ,  KC_F5 ,                     KVM_SW, XXXXXXX, SNAP_TOP, XXXXXXX, XXXXXXX, _______,\
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-      C_ALT_D, MS_LEFT, MS_UP  , MS_DOWN, MS_RGHT,  KC_F12,                     M_JIGL,SNAP_LFT, SNAP_BTM, SNAP_RT, KC_CALC, _______,\
+      C_ALT_D, MS_LEFT, MS_UP,   MS_DOWN,  MS_RGHT, KC_F12,                     XXXXXXX,SNAP_LFT,SNAP_BTM, SNAP_RT, KC_CALC, _______,\
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
       _______, MS_BTN1, MS_BTN2, MS_BTN3, XXXXXXX,  KC_NUM,                     LOCKWIN, QK_RBT,  QK_BOOT, EE_CLR,  KC_SLEP, _______,\
   //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
@@ -229,54 +185,3 @@ uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
             return TAPPING_TERM;
     }
 }
-
-layer_state_t layer_state_set_user(layer_state_t state) {
-    switch (get_highest_layer(state)) {
-    case _QWERTY:
-        rgb_matrix_sethsv(HSV_PURPLE);
-        break;
-    case _LOWER:
-        rgb_matrix_sethsv(HSV_BLUE);
-        break;
-    case _RAISE:
-        rgb_matrix_sethsv(HSV_GREEN);
-        break;
-    case _FUNC:
-        rgb_matrix_sethsv(HSV_RED);
-        break;
-    }
-  return state;
-}
-
-
-#if defined(ENCODER_ENABLE) && defined(ENCODER_MAP_ENABLE)
-const uint16_t PROGMEM encoder_map[][NUM_ENCODERS][NUM_DIRECTIONS] = {
-
-};
-#endif // defined(ENCODER_ENABLE) && defined(ENCODER_MAP_ENABLE)
-
-#ifdef OLED_ENABLE
-bool oled_task_user(void) {
-    // Host Keyboard Layer Status
-    if (is_keyboard_master()) {
-        switch (get_highest_layer(layer_state)) {
-            case 0:
-                oled_write_raw(layer_zero, sizeof(layer_zero));
-                break;
-            case 1:
-                oled_write_raw(layer_one, sizeof(layer_one));
-                break;
-            case 2:
-                oled_write_raw(layer_two, sizeof(layer_two));
-                break;
-            case 3:
-                oled_write_raw(layer_three, sizeof(layer_three));
-                break;
-        }
-    } else {
-        // oled_write_raw(logo, sizeof(logo));
-        oled_write_raw_P(bs_logo_img, sizeof(bs_logo_img));
-    }
-    return false;
-}
-#endif

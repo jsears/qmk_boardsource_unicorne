@@ -1,14 +1,7 @@
 #include QMK_KEYBOARD_H
+#include "print.h"
 
 extern uint8_t is_master;
-
-bool is_mouse_jiggle_active = false;
-bool mouse_jiggle_direction = false; // used to alternate direction
-uint16_t mouse_jiggle_frequency = 3000; // how often to move the mouse (15 seconds)
-uint16_t mouse_jiggle_timer = 0;
-
-bool is_alt_tab_active = false; // ADD this near the beginning of keymap.c
-uint16_t alt_tab_timer = 0;     // we will be using them soon.
 
 void keyboard_post_init_user(void) {
 #ifdef RGB_MATRIX_ENABLE
@@ -17,7 +10,20 @@ void keyboard_post_init_user(void) {
     //rgb_matrix_mode(RGB_MATRIX_SOLID_REACTIVE);
     rgb_matrix_sethsv(HSV_PURPLE);
 #endif
+    debug_enable=true;
+    debug_matrix=true;
+    debug_keyboard=true;
 }
+
+// Each layer gets a name for readability, which is then used in the keymap matrix below.
+// The underscores don't mean anything - you can have a layer called STUFF or any other name.
+// Layer names don't all need to be of the same length, obviously, and you can also skip them
+// entirely and just use numbers.
+#define _QWERTY 0
+#define _LOWER  1
+#define _RAISE  2
+#define _FUNC   3
+#define _SPCHRS 4
 
 enum custom_keycodes {
     DEFAULT = SAFE_RANGE,
@@ -25,7 +31,7 @@ enum custom_keycodes {
     RAISE,
     FUNC,
     LOCKWIN,
-    M_JIGL,
+    KC_JIGG,
     C_ALT_D,
     SNAP_LFT,
     SNAP_RT,
@@ -47,8 +53,62 @@ combo_t key_combos[COMBO_COUNT] = {
 
 };
 
+__attribute__((weak))
+bool process_record_keymap(uint16_t keycode, keyrecord_t *record) { return true; }
+
+__attribute__((weak))
+bool process_record_secrets(uint16_t keycode, keyrecord_t *record) { return true; }
+
+/*declare boolean for jiggler*/
+bool is_jiggling = false;
+
+/*timers*/
+uint32_t idle_timeout = 30000; // (after 30s)
+uint32_t mouse_interval = 10000; // (every 10s)
+
+static uint32_t idle_callback(uint32_t trigger_time, void* cb_arg) {
+    // now idle
+    if(is_jiggling) {
+        #ifdef CONSOLE_ENABLE
+        dprintf("sending: %s\n", "X_F15");
+        #endif
+        SEND_STRING(SS_TAP(X_F15));
+    }
+    return mouse_interval;
+}
+
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+
+     // on every key event start or extend `idle_callback()` deferred execution after IDLE_TIMEOUT_MS
+    static deferred_token idle_token = INVALID_DEFERRED_TOKEN;
+
+    #ifdef CONSOLE_ENABLE
+        dprintf("deferred_exec: %s\n", !extend_deferred_exec(idle_token, idle_timeout) ? "true" : "false");
+        #endif
+
+    if (!extend_deferred_exec(idle_token, idle_timeout)) {
+        idle_token = defer_exec(idle_timeout, idle_callback, NULL);
+    }
+
+#ifdef CONSOLE_ENABLE
+    // uprintf("KL: kc: 0x%04X, col: %2u, row: %2u, pressed: %u, time: %5u, int: %u, count: %u\n", keycode, record->event.key.col, record->event.key.row, record->event.pressed, record->event.time, record->tap.interrupted, record->tap.count);
+#endif
+
     switch (keycode) {
+        case KC_JIGG:
+            if (record->event.pressed) {
+                    is_jiggling = !is_jiggling; /*flip boolean to true*/
+                    #ifdef CONSOLE_ENABLE
+                    dprintf("is_jiggling: %s\n", is_jiggling ? "true" : "false");
+                    #endif
+                    if(is_jiggling) {
+                        layer_on(_SPCHRS);
+                    } else {
+                        layer_off(_SPCHRS);
+                    }
+            }
+
+            break;
         case LOCKWIN:
             if (record->event.pressed) {
                 // when keycode LOCKWIN is pressed
@@ -60,11 +120,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                 unregister_code(KC_L);  // release the L key
             }
             break;
-        case M_JIGL:
-            if (record->event.pressed) {
-                is_mouse_jiggle_active = !is_mouse_jiggle_active;
-            }
-          break;
         case C_ALT_D:
             if(record->event.pressed) {
                 register_code(KC_LCTL);
@@ -122,38 +177,9 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             }
         break;
     }
-    return true;
+    // return true;
+    return process_record_keymap(keycode, record) && process_record_secrets(keycode, record);
 }
-
-void matrix_scan_user(void) {
-    if (is_keyboard_master()) {
-        // initialize timer on master half only, remove if statement above for non-split
-        if (mouse_jiggle_timer == 0) mouse_jiggle_timer = timer_read();
-    }
-
-    if (is_mouse_jiggle_active) {
-        if (timer_elapsed(mouse_jiggle_timer) > mouse_jiggle_frequency) {
-            mouse_jiggle_timer = timer_read();
-            tap_code(KC_NUM);
-            if (mouse_jiggle_direction) {
-                tap_code(KC_MS_L);
-            } else {
-                tap_code(KC_MS_R);
-            }
-            tap_code(KC_NUM);
-            mouse_jiggle_direction = !mouse_jiggle_direction;
-        } 
-    }
-}
-
-// Each layer gets a name for readability, which is then used in the keymap matrix below.
-// The underscores don't mean anything - you can have a layer called STUFF or any other name.
-// Layer names don't all need to be of the same length, obviously, and you can also skip them
-// entirely and just use numbers.
-#define _QWERTY 0
-#define _LOWER  1
-#define _RAISE  2
-#define _FUNC   3
 
 // For _QWERTY layer
 #define OSL_FUN  OSL(_FUNC)
@@ -184,11 +210,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 [_LOWER] = LAYOUT_split_3x6_3( \
   //,-----------------------------------------------------.                    ,-----------------------------------------------------.
-      KC_GRV,  KC_EXLM, KC_AT,  KC_HASH, KC_DLR,  KC_PERC,                      KC_CIRC, KC_AMPR, KC_ASTR, KC_LPRN, KC_RPRN, _______,\
+      KC_GRV,  KC_F1,   KC_F2,  KC_F3,   KC_F4,   KC_F5,                         KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F12,\
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
       _______, KC_1,    KC_2,   KC_3,    KC_4,    KC_5,                          KC_6,    KC_7,    KC_8,    KC_9,    KC_0,   _______,\
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-      _______, XXXXXXX, XXXXXXX, KC_EQL, KC_LBRC, KC_LCBR,                       KC_RCBR, KC_RBRC, KC_MINS, XXXXXXX, XXXXXXX,_______,\
+      _______, XXXXXXX, XXXXXXX, KC_EQL, KC_LBRC, KC_LCBR,                       KC_RCBR, KC_RBRC, KC_MINS, XXXXXXX, XXXXXXX,KC_TRNS,\
   //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
                                           KC_TRNS, KC_TRNS, KC_TRNS,    KC_TRNS, KC_TRNS, KC_TRNS \
                                       //`--------------------------'  `--------------------------'
@@ -200,7 +226,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
      _______, KC_INS,  KC_END,  KC_PGDN, XXXXXXX, XXXXXXX,                      _______, KC_LEFT, KC_DOWN, KC_RGHT, XXXXXXX, _______,\
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-     _______, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                      KC_MPLY, KC_MPRV, KC_MNXT, KC_VOLD, KC_VOLU, KC_MUTE,\
+     XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                      KC_MPLY, KC_MPRV, KC_MNXT, KC_VOLD, KC_VOLU, KC_TRNS,\
   //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
                                           KC_TRNS, KC_TRNS, KC_TRNS,   KC_TRNS, KC_TRNS, KC_TRNS\
                                       //`--------------------------'  `--------------------------'
@@ -208,11 +234,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 [_FUNC] = LAYOUT_split_3x6_3( \
   //,-----------------------------------------------------.                    ,-----------------------------------------------------.
-      _______, KC_F1  , KC_F2  , KC_F3   , KC_F4 ,  KC_F5 ,                     KVM_SW, XXXXXXX, SNAP_TOP, XXXXXXX, RGB_TOG, _______,\
+      _______, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                     XXXXXXX, XXXXXXX, SNAP_TOP, XXXXXXX, RM_TOGG, _______,\
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-      C_ALT_D, KC_MS_L, KC_MS_U, KC_MS_D, KC_MS_R,  KC_F12,                     M_JIGL,SNAP_LFT, SNAP_BTM, SNAP_RT, KC_CALC, _______,\
+      C_ALT_D, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                     XXXXXXX,SNAP_LFT, SNAP_BTM, SNAP_RT, KC_CALC, _______,\
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-      _______, KC_BTN1, KC_BTN2, KC_BTN3, XXXXXXX,  KC_NUM,                     LOCKWIN, QK_RBT,  QK_BOOT, EE_CLR,  KC_SLEP, _______,\
+      _______, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                     LOCKWIN, QK_RBT,  QK_BOOT, EE_CLR,  KC_SLEP, _______,\
   //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
                                           KC_TRNS, KC_TRNS, KC_TRNS,    KC_TRNS, KC_TRNS, KC_TRNS\
                                       //`--------------------------'  `--------------------------'
@@ -243,6 +269,10 @@ layer_state_t layer_state_set_user(layer_state_t state) {
         break;
     case _FUNC:
         rgb_matrix_sethsv(HSV_RED);
+        break;
+    case _SPCHRS:
+        // rgb_matrix_set_color(i, HSV_YELLOW);
+        rgb_matrix_sethsv(HSV_YELLOW);
         break;
     }
   return state;
@@ -281,7 +311,8 @@ bool oled_task_user(void) {
                 oled_write_ln_P(PSTR("Undefined"), false);
         }
     } else {
-        oled_write_raw(logo, sizeof(logo));
+        // oled_write_raw(logo, sizeof(logo));
+        oled_write_raw_P(bs_logo_img, sizeof(bs_logo_img));
     }
     return false;
 }
