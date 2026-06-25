@@ -1,5 +1,7 @@
 # QMK Userspace
 
+![Build Status](https://github.com/jsears/qmk_boardsource_unicorne/actions/workflows/build_binaries.yaml/badge.svg)
+
 This is a template repository which allows for an external set of QMK keymaps to be defined and compiled. This is useful for users who want to maintain their own keymaps without having to fork the [main QMK repository](https://github.com/qmk/qmk_firmware). You must still fork the main QMK repository if writing firmware for a *new* keyboard.
 
 ## Howto configure your build targets
