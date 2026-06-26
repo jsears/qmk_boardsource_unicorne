@@ -13,20 +13,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 #pragma once
 
-/* SPI Config for spi flash*/
-#define SPI_DRIVER SPIDQ
-#define SPI_SCK_PIN B3
-#define SPI_MOSI_PIN B5
-#define SPI_MISO_PIN B4
+#include_next <mcuconf.h>
 
-#define EXTERNAL_FLASH_SPI_SLAVE_SELECT_PIN C12
+#undef WB32_I2C_USE_I2C1
+#define WB32_I2C_USE_I2C1 TRUE
 
-/* I2C Config for LED Driver */
-#define SNLED27351_I2C_ADDRESS_1 SNLED27351_I2C_ADDRESS_GND
+#undef WB32_SPI_USE_QSPI
+#define WB32_SPI_USE_QSPI TRUE
 
-/* WB32 MCU has no default definition */
-#define I2C1_OPMODE OPMODE_I2C
-#define I2C1_CLOCK_SPEED 400000
