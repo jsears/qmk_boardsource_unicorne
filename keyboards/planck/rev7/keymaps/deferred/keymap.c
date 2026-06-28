@@ -18,7 +18,7 @@
 
 enum planck_layers { _QWERTY, _COLEMAK, _COLEMAKDH, _DVORAK, _LOWER, _RAISE, _FUNC, _PLOVER, _ADJUST };
 
-enum planck_keycodes { PLOVER = SAFE_RANGE, BACKLIT, EXT_PLV, LOCKWIN, KC_JIGG, C_ALT_D, SNAP_LFT, SNAP_RT, SNAP_TOP, SNAP_BTM };
+enum planck_keycodes { PLOVER = SAFE_RANGE, BACKLIT, EXT_PLV, KC_JIGG, ALT_TAB, SNAP_LFT, SNAP_RT, SNAP_TOP, SNAP_BTM };
 
 #define LOWER MO(_LOWER)
 #define RAISE MO(_RAISE)
@@ -52,6 +52,17 @@ tap_dance_action_t tap_dance_actions[] = {
     // Tap once for Space, twice for Enter Lock
     [TD_SPC_ENT] = ACTION_TAP_DANCE_DOUBLE(KC_SPC, KC_ENT),
 };
+
+static uint16_t alt_tab_timer = 0;
+static bool alt_tab_active = false;
+
+void matrix_scan_user(void) {
+    if (alt_tab_active && timer_elapsed(alt_tab_timer) > 1000) {
+        // No presses for 1000ms, release Alt
+        unregister_code(KC_LALT);
+        alt_tab_active = false;
+    }
+}
 
 __attribute__((weak))
 bool process_record_keymap(uint16_t keycode, keyrecord_t *record) { return true; }
@@ -102,10 +113,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * `-----------------------------------------------------------------------------------'
  */
 [_QWERTY] = LAYOUT_planck_grid(
-    OSM_ALT,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_BSLS,
-    OSM_CTL,  KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_QUOT,
-    OSM_SFT,  KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, OSL_FUN ,
-    BACKLIT,  XXXXXXX, KC_LALT, OSM_GUI, LOW_TAB, KC_SPC,  KC_ENT,  RSE_BSP, OSM_RSFT, C_ALT_D, XXXXXXX,   LOCKWIN
+    KC_LALT,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,        KC_P,    KC_BSLS,
+    KC_LSFT,  KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_H,    KC_J,    KC_K,    KC_L,        KC_SCLN, KC_QUOT,
+    KC_LCTL,  KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_N,    KC_M,    KC_COMM, KC_DOT,      KC_SLSH, OSL_FUN ,
+    XXXXXXX,  KC_LCTL, ALT_TAB, KC_LGUI, LOW_TAB, KC_SPC,  KC_ENT,  RSE_BSP, KC_RSFT, LCA(KC_DEL), KC_JIGG, LGUI(KC_L)
 ),
 
 /* Colemak
@@ -120,10 +131,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * `-----------------------------------------------------------------------------------'
  */
 [_COLEMAK] = LAYOUT_planck_grid(
-    OSM_ALT,  KC_Q,    KC_W,    KC_F,    KC_P,    KC_G,    KC_J,    KC_L,    KC_U,    KC_Y,    KC_SCLN, KC_BSPC,
-    OSM_CTL,  KC_A,    KC_R,    KC_S,    KC_T,    KC_D,    KC_H,    KC_N,    KC_E,    KC_I,    KC_O,    KC_QUOT,
-    OSM_SFT, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_K,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, OSL_FUN ,
-    BACKLIT, _______, KC_LALT, OSM_GUI, LOW_TAB, KC_SPC,  KC_ENT,  RSE_BSP, OSM_RSFT, _______, _______, _______
+    KC_LALT,  KC_Q,    KC_W,    KC_F,    KC_P,    KC_G,    KC_J,    KC_L,    KC_U,    KC_Y,    KC_SCLN, KC_BSPC,
+    KC_LSFT,  KC_A,    KC_R,    KC_S,    KC_T,    KC_D,    KC_H,    KC_N,    KC_E,    KC_I,    KC_O,    KC_QUOT,
+    KC_LCTL, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_K,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, OSL_FUN ,
+    XXXXXXX, _______, _______, OSM_GUI, LOW_TAB, KC_SPC,  KC_ENT,  RSE_BSP, KC_RSFT, _______, _______, _______
 ),
 
 /* ColemakDH
@@ -138,10 +149,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * `-----------------------------------------------------------------------------------'
  */
 [_COLEMAKDH] = LAYOUT_planck_grid(
-    OSM_ALT,  KC_Q,    KC_W,    KC_F,    KC_P,    KC_G,    KC_J,    KC_L,    KC_U,     KC_Y,    KC_SCLN, KC_BSPC,
-    OSM_SFT,  KC_A,    KC_R,    KC_S,    KC_T,    KC_D,    KC_H,    KC_N,    KC_E,     KC_I,    KC_O,    KC_QUOT,
-    OSM_CTL,  KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_K,    KC_M,    KC_COMM,  KC_DOT,  KC_SLSH, OSL_FUN ,
-    XXXXXXX,  XXXXXXX, KC_LALT, OSM_GUI, LOW_TAB, KC_SPC,  KC_ENT,  RSE_BSP, OSM_RSFT, XXXXXXX, XXXXXXX, XXXXXXX
+    KC_LALT,  KC_Q,    KC_W,    KC_F,    KC_P,    KC_G,    KC_J,    KC_L,    KC_U,     KC_Y,    KC_SCLN, KC_BSPC,
+    KC_LSFT,  KC_A,    KC_R,    KC_S,    KC_T,    KC_D,    KC_H,    KC_N,    KC_E,     KC_I,    KC_O,    KC_QUOT,
+    KC_LCTL,  KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_K,    KC_M,    KC_COMM,  KC_DOT,  KC_SLSH, OSL_FUN ,
+    XXXXXXX,  XXXXXXX, _______, OSM_GUI, LOW_TAB, KC_SPC,  KC_ENT,  RSE_BSP, KC_RSFT,  XXXXXXX, XXXXXXX, XXXXXXX
 ),
 
 /* Dvorak
@@ -159,7 +170,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     KC_TAB,  KC_QUOT, KC_COMM, KC_DOT,  KC_P,    KC_Y,    KC_F,    KC_G,    KC_C,    KC_R,    KC_L,    KC_BSPC,
     KC_ESC,  KC_A,    KC_O,    KC_E,    KC_U,    KC_I,    KC_D,    KC_H,    KC_T,    KC_N,    KC_S,    KC_SLSH,
     KC_LSFT, KC_SCLN, KC_Q,    KC_J,    KC_K,    KC_X,    KC_B,    KC_M,    KC_W,    KC_V,    KC_Z,    KC_ENT ,
-    BACKLIT, KC_LCTL, KC_LALT, KC_LGUI, LOWER,   KC_RSFT, KC_SPC,  RAISE,   KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT
+    XXXXXXX, KC_LCTL, _______, KC_LGUI, LOWER,   KC_RSFT, KC_SPC,  RAISE,   KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT
 ),
 
 /* Lower
@@ -175,9 +186,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  */
 [_LOWER] = LAYOUT_planck_grid(
     KC_GRV,  KC_F1,   KC_F2,   KC_F3,  KC_F4,   KC_F5,   KC_F6,   KC_F7,    KC_F8,   KC_F9,   KC_F10,  KC_F12,
-    _______, KC_1,    KC_2,    KC_3,   KC_4,    KC_5,    KC_6,    KC_7,     KC_8,    KC_9,    KC_0,    _______,
-    _______, _______, _______, KC_EQL, KC_LBRC, KC_LCBR, KC_RCBR, KC_RBRC,  KC_MINS, _______, _______, OSL_FUN,
-    _______, _______, KC_LALT, OSM_GUI,LOW_TAB, KC_SPC,  KC_ENT,  RSE_BSP,  OSM_SFT, _______, _______, _______
+    _______, KC_1,    KC_2,    KC_3,   KC_4,    KC_5,    KC_6,    KC_7,     KC_8,    KC_9,    KC_0,    KC_BSLS,
+    _______, _______, _______, KC_EQL, KC_LBRC, KC_LCBR, KC_RCBR, KC_RBRC,  KC_MINS, KC_EQL,  _______, OSL_FUN,
+    _______, _______, _______, KC_LGUI,LOW_TAB, KC_SPC,  KC_ENT,  RSE_BSP,  OSM_SFT, _______, _______, _______
 ),
 
 /* Raise
@@ -193,9 +204,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  */
 [_RAISE] = LAYOUT_planck_grid(
     _______,  KC_DEL,  KC_HOME, KC_PGUP, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_UP,   XXXXXXX, XXXXXXX, KC_BSPC,
-    _______,  KC_INS,  KC_END,  KC_PGDN, XXXXXXX, XXXXXXX, XXXXXXX, KC_LEFT, KC_DOWN, KC_UP,   XXXXXXX, KC_BSLS,
-    _______,  XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, OSL_FUN,
-    _______,  _______, KC_LALT, OSM_GUI,LOW_TAB, KC_SPC,  KC_ENT,  RSE_BSP,  OSM_SFT, _______, _______, _______
+    _______,  KC_INS,  KC_END,  KC_PGDN, XXXXXXX, XXXXXXX, XXXXXXX, KC_LEFT, SNAP_BTM, SNAP_RT, XXXXXXX, _______,
+    _______,  XXXXXXX, XXXXXXX, KC_EQL,  XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, OSL_FUN,
+    _______,  _______, _______, KC_LGUI,LOW_TAB, KC_SPC,  KC_ENT,  RSE_BSP,  OSM_SFT, _______, _______, _______
 ),
 
 /* Func
@@ -210,10 +221,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * `-----------------------------------------------------------------------------------'
  */
 [_FUNC] = LAYOUT_planck_grid(
-    _______,  XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,  SNAP_TOP, XXXXXXX,  XXXXXXX, XXXXXXX,
-    _______,  XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, SNAP_LFT, SNAP_BTM, SNAP_RT,  XXXXXXX, KC_CALC,
-    _______,  XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, QK_RBT,   QK_BOOT,  EE_CLR,   XXXXXXX, OSL_FUN,
-    XXXXXXX,  XXXXXXX, KC_LALT, OSM_GUI, LOW_TAB, KC_SPC,  KC_ENT,  RSE_BSP,  OSM_SFT,  _______, _______, _______
+    _______,  DB_TOGG, XXXXXXX,   XXXXXXX, XXXXXXX,   XXXXXXX, XXXXXXX, XXXXXXX,  SNAP_TOP, XXXXXXX, XXXXXXX, XXXXXXX,
+    _______,  KC_CALC, LSG(KC_S), XXXXXXX, XXXXXXX,   XXXXXXX, XXXXXXX, SNAP_LFT, SNAP_BTM, SNAP_RT, XXXXXXX, XXXXXXX,
+    _______,  XXXXXXX, XXXXXXX,   XXXXXXX, LCS(KC_V), XXXXXXX, XXXXXXX, QK_RBT,   QK_BOOT,  EE_CLR,  XXXXXXX, OSL_FUN,
+    _______,  _______, _______,   KC_LGUI, LOW_TAB,   KC_SPC,  KC_ENT,  RSE_BSP,  OSM_SFT,  _______, _______, _______
 ),
 
 /* Plover layer (http://opensteno.org)
@@ -332,6 +343,27 @@ uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
 bool play_encoder_melody(uint8_t index, bool clockwise);
 
 layer_state_t layer_state_set_user(layer_state_t state) {
+    switch (get_highest_layer(state)) {
+    case _QWERTY:
+        if(is_jiggling) {
+            rgblight_sethsv_range(43, 255, 255, 0, 9);
+        } else {
+            // Set Backlight LEDS to PURPLE
+            rgblight_sethsv_range(191, 255, 255, 0, 9);
+        }
+        break;
+    case _FUNC:
+        if(is_jiggling) {
+            rgblight_sethsv_range(43, 255, 255, 0, 9);
+        } else {
+            // Set Backlight LEDS to PURPLE
+            rgblight_sethsv_range(170, 255, 255, 0, 9);
+        }
+        break;
+    case _PLOVER:
+        rgblight_sethsv_range(21, 255, 255, 0, 9);
+        break;
+    }
     return update_tri_layer_state(state, _LOWER, _RAISE, _ADJUST);
 }
 
@@ -399,7 +431,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                     dprintf("is_jiggling: %s\n", is_jiggling ? "true" : "false");
                     #endif
                     if(is_jiggling) {
-                        //TO DO Change this method call to changing the color of the current layer.
                         layer_on(_FUNC);
                     } else {
                         layer_off(_FUNC);
@@ -407,27 +438,21 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             }
 
             break;
-        case LOCKWIN:
+        case ALT_TAB:
             if (record->event.pressed) {
-                // when keycode LOCKWIN is pressed
-                register_code(KC_LGUI);  // press the Windows key
-                register_code(KC_L); // press the L key
+                if (!alt_tab_active) {
+                    alt_tab_active = true;
+                    register_code(KC_LALT);
+                    register_code(KC_TAB);
+                } else {
+                    // Subsequent press while active, send another Tab
+                    register_code(KC_TAB);
+                }
+                alt_tab_timer = timer_read();
             } else {
-                // when keycode LOCKWIN is released
-                unregister_code(KC_LGUI); // release the Windows key
-                unregister_code(KC_L);  // release the L key
+                unregister_code(KC_TAB);
             }
-            break;
-        case C_ALT_D:
-            if(record->event.pressed) {
-                register_code(KC_LCTL);
-                register_code(KC_LALT);
-                register_code(KC_DEL);
-            } else {
-                unregister_code(KC_LCTL);
-                unregister_code(KC_LALT);
-                unregister_code(KC_DEL);
-            }
+            return false;
             break;
         case SNAP_LFT:
             if(record->event.pressed) {

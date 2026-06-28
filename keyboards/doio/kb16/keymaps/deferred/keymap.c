@@ -20,6 +20,12 @@
 // OLED animation
 #include "lib/layer_status/layer_status.h"
 
+void keyboard_post_init_user(void) {
+    rgb_matrix_mode_noeeprom(RGB_MATRIX_SOLID_COLOR);
+    rgb_matrix_sethsv_noeeprom(191, 255, 255);
+    // rgb_matrix_sethsv_noeeprom(HSV_OFF);
+}
+
 // Each layer gets a name for readability, which is then used in the keymap matrix below.
 // The underscores don't mean anything - you can have a layer called STUFF or any other name.
 // Layer names don't all need to be of the same length, obviously, and you can also skip them
@@ -99,50 +105,41 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 /*
-       ┌───┬───┬───┬───┐   ┌───┐ ┌───┐
-       │ 1 │ 2 │ 3 │ 4 │   │Ply│ │TO1│
-       ├───┼───┼───┼───┤   └───┘ └───┘
-       │ 5 │ 6 │ 7 │ 8 │
-       ├───┼───┼───┼───┤
-       │ 9 │ 0 │ ↑ │Ent│      ┌───┐
-       ├───┼───┼───┼───┤      │Mut│
-       │Fn2│ ← │ ↓ │ → │      └───┘
-       └───┴───┴───┴───┘
-       ┌───┬───┬───┬───┐   ┌───┐ ┌───┐
-       │ ! │ @ │ # │ $ │   │   │ │   │
-       ├───┼───┼───┼───┤   └───┘ └───┘
-       │ % │ ^ │ & │ * │
-       ├───┼───┼───┼───┤
-       │ ( │ ) │   │   │      ┌───┐
-       ├───┼───┼───┼───┤      │   │
-       │   │   │   │   │      └───┘
-       └───┴───┴───┴───┘
+       ┌────┬────┬────┬────┐   ┌────┐ ┌────┐
+       │Ctrl│CST │    │    │   │Play│ │TO1 │
+       ├────┼────┼────┼────┤   └────┘ └────┘
+       │ShGS│CtC │CtV │    │
+       ├────┼────┼────┼────┤
+       │    │CtSP│CtSV│    │      ┌────┐
+       ├────┼────┼────┼────┤      │Mute│
+       │    │    │    │CAD │      └────┘
+       └────┴────┴────┴────┘
 */
     /*  Row:    0         1        2        3         4      */
     [_BASE] = LAYOUT(
-                KC_1,     KC_2,    KC_3,    KC_4,     KC_MPLY,
-                KC_5,     KC_6,    KC_7,    KC_8,     TO(_FN),
-                KC_9,     KC_0,    KC_UP,   KC_ENT,   KC_MUTE,
-                MO(_FN2), KC_LEFT, KC_DOWN, KC_RIGHT
+                KC_LCTL,       LCS(KC_T),  _______,   _______, KC_MPLY,
+                LSG(KC_S),     C(KC_C),    C(KC_V),   _______, TO(_FN),
+                _______,       LCS(KC_P),  LCS(KC_V), _______, KC_MUTE,
+                KC_JIGG,       _______,    _______,   C(A(KC_DEL))
             ),
 
 /*
        ┌───┬───┬───┬───┐   ┌───┐ ┌───┐
-       │   │   │   │   │   │   │ │   │
+       │ 7 │ 8 │ 9 │ / │   │CAD│ │TO2│
        ├───┼───┼───┼───┤   └───┘ └───┘
-       │   │   │   │   │
+       │ 4 │ 5 │ 6 │ * │
        ├───┼───┼───┼───┤
-       │   │   │   │   │      ┌───┐
+       │ 1 │ 2 │ 3 │ - │      ┌───┐
        ├───┼───┼───┼───┤      │   │
-       │   │   │   │   │      └───┘
+       │ + │ 0 │Del│Ent│      └───┘
        └───┴───┴───┴───┘
 */
     /*  Row:    0        1        2        3        4       */
     [_FN] = LAYOUT(
-                _______, _______, _______, _______, _______,
-                _______, _______, _______, _______, TO(_FN1),
-                _______, _______, _______, _______, _______,
-                _______, _______, _______, _______
+                KC_7,     KC_8,    KC_9,    KC_PSLS,     KC_CALC,
+                KC_4,     KC_5,    KC_6,    KC_PAST,     TO(_FN1),
+                KC_1,     KC_2,    KC_3,    KC_PMNS,     KC_CALC,
+                KC_PPLS,  KC_0,    KC_DEL,  KC_PENT
             ),
 
 /*
@@ -158,10 +155,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 */
     /*  Row:    0        1        2        3        4       */
     [_FN1] = LAYOUT(
-                _______, _______, _______, _______, _______,
-                _______, _______, _______, _______, TO(_FN2),
-                _______, _______, _______, _______, _______,
-                _______, _______, _______, KC_JIGG
+                KC_NO,    KC_NO,   KC_NO,   DB_TOGG,     _______,
+                KC_NO,    KC_NO,   KC_NO,   KC_NO,       TO(_FN2),
+                KC_NO,    KC_NO,   KC_NO,   KC_NO,       _______,
+                KC_JIGG,  KC_NO,   KC_NO,   KC_NO
             ),
 
 /*
@@ -187,16 +184,36 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 layer_state_t layer_state_set_user(layer_state_t state) {
     switch (get_highest_layer(state)) {
     case _BASE:
-        rgb_matrix_sethsv(HSV_PURPLE);
+        if(is_jiggling) {
+            rgb_matrix_sethsv_noeeprom(43, 255, 255);
+        } else {
+            // Set Backlight LEDS to PURPLE
+            rgb_matrix_sethsv_noeeprom(191, 255, 255);
+        }
         break;
     case _FN:
-        rgb_matrix_sethsv(HSV_BLUE);
+        if(is_jiggling) {
+            rgb_matrix_sethsv_noeeprom(43, 255, 255);
+        } else {
+            // Set Backlight LEDS to PURPLE
+            rgb_matrix_sethsv_noeeprom(170, 255, 255);
+        }
         break;
     case _FN1:
-        rgb_matrix_sethsv(HSV_YELLOW);
+        if(is_jiggling) {
+            rgb_matrix_sethsv_noeeprom(43, 255, 255);
+        } else {
+            // Set Backlight LEDS to PURPLE
+            rgb_matrix_sethsv_noeeprom(85, 255, 255);
+        }
         break;
     case _FN2:
-        rgb_matrix_sethsv(HSV_RED);
+        if(is_jiggling) {
+            rgb_matrix_sethsv_noeeprom(43, 255, 255);
+        } else {
+            // Set Backlight LEDS to PURPLE
+            rgb_matrix_sethsv_noeeprom(0, 255, 255);
+        }
         break;
     }
   return state;
@@ -213,8 +230,8 @@ layer_state_t layer_state_set_user(layer_state_t state) {
 #ifdef ENCODER_MAP_ENABLE
 const uint16_t PROGMEM encoder_map[][NUM_ENCODERS][NUM_DIRECTIONS] = {
     [_BASE] = { ENCODER_CCW_CW(KC_MPRV, KC_MNXT), ENCODER_CCW_CW(KC_PGDN, KC_PGUP), ENCODER_CCW_CW(KC_VOLD, KC_VOLU) },
-    [_FN]   = { ENCODER_CCW_CW(KC_TRNS, KC_TRNS), ENCODER_CCW_CW(KC_TRNS, KC_TRNS), ENCODER_CCW_CW(KC_TRNS, KC_TRNS) },
-    [_FN1]  = { ENCODER_CCW_CW(KC_TRNS, KC_TRNS), ENCODER_CCW_CW(KC_TRNS, KC_TRNS), ENCODER_CCW_CW(KC_TRNS, KC_TRNS) },
-    [_FN2]  = { ENCODER_CCW_CW(KC_TRNS, KC_TRNS), ENCODER_CCW_CW(KC_TRNS, KC_TRNS), ENCODER_CCW_CW(KC_TRNS, KC_TRNS) },
+    [_FN]   = { ENCODER_CCW_CW(KC_MPRV, KC_MNXT), ENCODER_CCW_CW(KC_TRNS, KC_TRNS), ENCODER_CCW_CW(KC_TRNS, KC_TRNS) },
+    [_FN1]  = { ENCODER_CCW_CW(MS_WHLD, MS_WHLU), ENCODER_CCW_CW(MS_WHLL, MS_WHLR), ENCODER_CCW_CW(KC_TRNS, KC_TRNS) },
+    [_FN2]  = { ENCODER_CCW_CW(KC_MPRV, KC_MNXT), ENCODER_CCW_CW(KC_TRNS, KC_TRNS), ENCODER_CCW_CW(KC_TRNS, KC_TRNS) },
 };
 #endif

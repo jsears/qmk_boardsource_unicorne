@@ -1,3 +1,4 @@
 # Encoder enabled
 ENCODER_MAP_ENABLE = yes
 DEFERRED_EXEC_ENABLE = yes
+CONSOLE_ENABLE = yes
