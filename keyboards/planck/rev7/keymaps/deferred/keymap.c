@@ -16,13 +16,14 @@
 
 #include QMK_KEYBOARD_H
 
-enum planck_layers { _QWERTY, _COLEMAK, _COLEMAKDH, _DVORAK, _LOWER, _RAISE, _FUNC, _PLOVER, _ADJUST };
+enum planck_layers { _QWERTY, _COLEMAK, _COLEMAKDH, _DVORAK, _LOWER, _RAISE, _FUNC, _NUM, _PLOVER, _ADJUST };
 
 enum planck_keycodes { PLOVER = SAFE_RANGE, BACKLIT, EXT_PLV, KC_JIGG, ALT_TAB, SNAP_LFT, SNAP_RT, SNAP_TOP, SNAP_BTM };
 
 #define LOWER MO(_LOWER)
 #define RAISE MO(_RAISE)
 #define FUNC MO(_FUNC)
+#define NUM TG(_NUM)
 
 #define QWERTY PDF(_QWERTY)
 #define COLEMAK PDF(_COLEMAK)
@@ -30,15 +31,18 @@ enum planck_keycodes { PLOVER = SAFE_RANGE, BACKLIT, EXT_PLV, KC_JIGG, ALT_TAB, 
 #define DVORAK PDF(_DVORAK)
 
 enum combos {
-  JK_ESC
+  JK_ESC,
+  QW_CAPS
 };
 
 const uint16_t PROGMEM jk_combo[] = {KC_J, KC_K, COMBO_END};
+const uint16_t PROGMEM qw_combo[] = {KC_Q, KC_W, COMBO_END};
 
 
 combo_t key_combos[COMBO_COUNT] = {
   // For Vim, put Escape on the home row
   [JK_ESC]    = COMBO(jk_combo, KC_ESC),
+  [QW_CAPS]   = COMBO(qw_combo, KC_CAPS)
 
 };
 
@@ -116,7 +120,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     KC_LALT,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,        KC_P,    KC_BSLS,
     KC_LSFT,  KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_H,    KC_J,    KC_K,    KC_L,        KC_SCLN, KC_QUOT,
     KC_LCTL,  KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_N,    KC_M,    KC_COMM, KC_DOT,      KC_SLSH, OSL_FUN ,
-    XXXXXXX,  KC_LCTL, ALT_TAB, KC_LGUI, LOW_TAB, KC_SPC,  KC_ENT,  RSE_BSP, KC_RSFT, LCA(KC_DEL), KC_JIGG, LGUI(KC_L)
+    NUM,  KC_LCTL, ALT_TAB, KC_LGUI, LOW_TAB, KC_SPC,  KC_ENT,  RSE_BSP, KC_RSFT, LCA(KC_DEL), KC_JIGG, LGUI(KC_L)
 ),
 
 /* Colemak
@@ -134,7 +138,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     KC_LALT,  KC_Q,    KC_W,    KC_F,    KC_P,    KC_G,    KC_J,    KC_L,    KC_U,    KC_Y,    KC_SCLN, KC_BSPC,
     KC_LSFT,  KC_A,    KC_R,    KC_S,    KC_T,    KC_D,    KC_H,    KC_N,    KC_E,    KC_I,    KC_O,    KC_QUOT,
     KC_LCTL, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_K,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, OSL_FUN ,
-    XXXXXXX, _______, _______, OSM_GUI, LOW_TAB, KC_SPC,  KC_ENT,  RSE_BSP, KC_RSFT, _______, _______, _______
+    _______, _______, _______, OSM_GUI, LOW_TAB, KC_SPC,  KC_ENT,  RSE_BSP, KC_RSFT, _______, _______, _______
 ),
 
 /* ColemakDH
@@ -152,7 +156,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     KC_LALT,  KC_Q,    KC_W,    KC_F,    KC_P,    KC_G,    KC_J,    KC_L,    KC_U,     KC_Y,    KC_SCLN, KC_BSPC,
     KC_LSFT,  KC_A,    KC_R,    KC_S,    KC_T,    KC_D,    KC_H,    KC_N,    KC_E,     KC_I,    KC_O,    KC_QUOT,
     KC_LCTL,  KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_K,    KC_M,    KC_COMM,  KC_DOT,  KC_SLSH, OSL_FUN ,
-    XXXXXXX,  XXXXXXX, _______, OSM_GUI, LOW_TAB, KC_SPC,  KC_ENT,  RSE_BSP, KC_RSFT,  XXXXXXX, XXXXXXX, XXXXXXX
+    _______,  XXXXXXX, _______, OSM_GUI, LOW_TAB, KC_SPC,  KC_ENT,  RSE_BSP, KC_RSFT,  XXXXXXX, XXXXXXX, XXXXXXX
 ),
 
 /* Dvorak
@@ -170,7 +174,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     KC_TAB,  KC_QUOT, KC_COMM, KC_DOT,  KC_P,    KC_Y,    KC_F,    KC_G,    KC_C,    KC_R,    KC_L,    KC_BSPC,
     KC_ESC,  KC_A,    KC_O,    KC_E,    KC_U,    KC_I,    KC_D,    KC_H,    KC_T,    KC_N,    KC_S,    KC_SLSH,
     KC_LSFT, KC_SCLN, KC_Q,    KC_J,    KC_K,    KC_X,    KC_B,    KC_M,    KC_W,    KC_V,    KC_Z,    KC_ENT ,
-    XXXXXXX, KC_LCTL, _______, KC_LGUI, LOWER,   KC_RSFT, KC_SPC,  RAISE,   KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT
+    _______, KC_LCTL, _______, KC_LGUI, LOWER,   KC_RSFT, KC_SPC,  RAISE,   KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT
 ),
 
 /* Lower
@@ -225,6 +229,24 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     _______,  KC_CALC, LSG(KC_S), XXXXXXX, XXXXXXX,   XXXXXXX, XXXXXXX, SNAP_LFT, SNAP_BTM, SNAP_RT, XXXXXXX, XXXXXXX,
     _______,  XXXXXXX, XXXXXXX,   XXXXXXX, LCS(KC_V), XXXXXXX, XXXXXXX, QK_RBT,   QK_BOOT,  EE_CLR,  XXXXXXX, OSL_FUN,
     _______,  _______, _______,   KC_LGUI, LOW_TAB,   KC_SPC,  KC_ENT,  RSE_BSP,  OSM_SFT,  _______, _______, _______
+),
+
+/* Num
+ * ,-----------------------------------------------------------------------------------.
+ * |      |      |      |      |      |      |  -   |  +   |  7   |  8   |  9   |      |
+ * |------+------+------+------+------+------+------+------+------+------+------+------|
+ * |      |      |      |      |      |      |  *   |  /   |  4   |  5   |  6   |      |
+ * |------+------+------+------+------+------+------+------+------+------+------+------|
+ * |      |      |      |      |      |      |      |  %   |  1   |  2   |  3   | Func |
+ * |------+------+------+------+------+------+------+------+------+------+------+------|
+ * |      |      | Alt  | GUI  |LowTab|Space |Enter |RaiBsp|Shift |  0   |  .   |      |
+ * `-----------------------------------------------------------------------------------'
+ */
+[_NUM] = LAYOUT_planck_grid(
+    _______,  XXXXXXX, XXXXXXX,   XXXXXXX, XXXXXXX,   XXXXXXX, KC_PMNS, KC_PPLS,  KC_7,    KC_8,    KC_9,    XXXXXXX,
+    _______,  XXXXXXX, XXXXXXX,   XXXXXXX, XXXXXXX,   XXXXXXX, KC_PAST, KC_PSLS,  KC_4,    KC_5,    KC_9,    XXXXXXX,
+    _______,  XXXXXXX, XXXXXXX,   XXXXXXX, XXXXXXX,   XXXXXXX, XXXXXXX, LCS(KC_5),KC_1,    KC_2,    KC_9,    OSL_FUN,
+    _______,  _______, _______,   KC_LGUI, LOW_TAB,   KC_SPC,  KC_ENT,  RSE_BSP,  OSM_SFT, KC_0,    KC_DOT,  _______
 ),
 
 /* Plover layer (http://opensteno.org)

@@ -9,8 +9,6 @@
         ["boardsource/unicorne", "mx"],
         ["doio/kb16/rev2", "default"],
         ["doio/kb16/rev2", "deferred"],
-        ["doio/kb16/rev1", "default"],
-        ["doio/kb16/rev1", "deferred"],
         ["inland/mk47", "default"],
         ["inland/mk47", "deferred"],
         ["beekeeb/piantor", "default"],
