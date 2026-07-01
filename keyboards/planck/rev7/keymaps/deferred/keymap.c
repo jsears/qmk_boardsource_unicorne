@@ -192,7 +192,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     KC_GRV,  KC_F1,   KC_F2,   KC_F3,  KC_F4,   KC_F5,   KC_F6,   KC_F7,    KC_F8,   KC_F9,   KC_F10,  KC_F12,
     _______, KC_1,    KC_2,    KC_3,   KC_4,    KC_5,    KC_6,    KC_7,     KC_8,    KC_9,    KC_0,    KC_BSLS,
     _______, _______, _______, KC_EQL, KC_LBRC, KC_LCBR, KC_RCBR, KC_RBRC,  KC_MINS, KC_EQL,  _______, OSL_FUN,
-    _______, _______, _______, KC_LGUI,LOW_TAB, KC_SPC,  KC_ENT,  RSE_BSP,  OSM_SFT, _______, _______, _______
+    _______, _______, _______, KC_LGUI,LOW_TAB, KC_SPC,  KC_ENT,  RSE_BSP,  KC_RSFT, _______, _______, _______
 ),
 
 /* Raise
@@ -208,9 +208,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  */
 [_RAISE] = LAYOUT_planck_grid(
     _______,  KC_DEL,  KC_HOME, KC_PGUP, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_UP,   XXXXXXX, XXXXXXX, KC_BSPC,
-    _______,  KC_INS,  KC_END,  KC_PGDN, XXXXXXX, XXXXXXX, XXXXXXX, KC_LEFT, SNAP_BTM, SNAP_RT, XXXXXXX, _______,
+    _______,  KC_INS,  KC_END,  KC_PGDN, XXXXXXX, XXXXXXX, XXXXXXX, KC_LEFT, KC_DOWN, KC_RGHT, XXXXXXX, _______,
     _______,  XXXXXXX, XXXXXXX, KC_EQL,  XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, OSL_FUN,
-    _______,  _______, _______, KC_LGUI,LOW_TAB, KC_SPC,  KC_ENT,  RSE_BSP,  OSM_SFT, _______, _______, _______
+    _______,  _______, _______, KC_LGUI,LOW_TAB, KC_SPC,  KC_ENT,  RSE_BSP,  KC_RSFT, _______, _______, _______
 ),
 
 /* Func
@@ -228,7 +228,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     _______,  DB_TOGG, XXXXXXX,   XXXXXXX, XXXXXXX,   XXXXXXX, XXXXXXX, XXXXXXX,  SNAP_TOP, XXXXXXX, XXXXXXX, XXXXXXX,
     _______,  KC_CALC, LSG(KC_S), XXXXXXX, XXXXXXX,   XXXXXXX, XXXXXXX, SNAP_LFT, SNAP_BTM, SNAP_RT, XXXXXXX, XXXXXXX,
     _______,  XXXXXXX, XXXXXXX,   XXXXXXX, LCS(KC_V), XXXXXXX, XXXXXXX, QK_RBT,   QK_BOOT,  EE_CLR,  XXXXXXX, OSL_FUN,
-    _______,  _______, _______,   KC_LGUI, LOW_TAB,   KC_SPC,  KC_ENT,  RSE_BSP,  OSM_SFT,  _______, _______, _______
+    _______,  _______, _______,   KC_LGUI, LOW_TAB,   KC_SPC,  KC_ENT,  RSE_BSP,  KC_RSFT,  _______, _______, _______
 ),
 
 /* Num
@@ -246,7 +246,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     _______,  XXXXXXX, XXXXXXX,   XXXXXXX, XXXXXXX,   XXXXXXX, KC_PMNS, KC_PPLS,  KC_7,    KC_8,    KC_9,    XXXXXXX,
     _______,  XXXXXXX, XXXXXXX,   XXXXXXX, XXXXXXX,   XXXXXXX, KC_PAST, KC_PSLS,  KC_4,    KC_5,    KC_9,    XXXXXXX,
     _______,  XXXXXXX, XXXXXXX,   XXXXXXX, XXXXXXX,   XXXXXXX, XXXXXXX, LCS(KC_5),KC_1,    KC_2,    KC_9,    OSL_FUN,
-    _______,  _______, _______,   KC_LGUI, LOW_TAB,   KC_SPC,  KC_ENT,  RSE_BSP,  OSM_SFT, KC_0,    KC_DOT,  _______
+    _______,  _______, _______,   KC_LGUI, LOW_TAB,   KC_SPC,  KC_ENT,  RSE_BSP,  KC_RSFT, KC_0,    KC_DOT,  _______
 ),
 
 /* Plover layer (http://opensteno.org)
