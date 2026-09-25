@@ -452,11 +452,11 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                     #ifdef CONSOLE_ENABLE
                     dprintf("is_jiggling: %s\n", is_jiggling ? "true" : "false");
                     #endif
-                    if(is_jiggling) {
-                        layer_on(_FUNC);
-                    } else {
-                        layer_off(_FUNC);
-                    }
+                    // if(is_jiggling) {
+                    //     layer_on(_FUNC);
+                    // } else {
+                    //     layer_off(_FUNC);
+                    // }
             }
 
             break;
